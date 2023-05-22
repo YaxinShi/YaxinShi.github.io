@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="description" content="UTSGAN: Unseen Transition Suss GAN for Transition-Aware Image-to-image Translation">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>UTSGAN: Unseen Transition Suss GAN for Transition-Aware Image-to-image Translation</title>
+        <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+        <link rel="stylesheet" href="./static/css/bulma.min.css">
+        <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+        <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+        <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+        <link rel="stylesheet" href="./static/css/index.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script defer src="./static/js/fontawesome.all.min.js"></script>
+        <script src="./static/js/bulma-carousel.min.js"></script>
+        <script src="./static/js/bulma-slider.min.js"></script>
+        <script src="./static/js/index.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous" onload="renderMathInElement(document.body);"></script>
+        <style>
+            video {
+                object-fit: fill;
+                width: auto;
+                height: 420px;
+                margin: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <section class="hero">
+            <div class="hero-body">
+                <div class="containeris-max-desktop">
+                    <div class="columns is-centered">
+                        <div class="column has-text-centered">
+                            <h1 class="title is-1 publication-title">UTSGAN: Unseen Transition Suss GAN for Transition-Aware Image-to-image Translation</h1>
+                            <div class="is-size-5 publication-authors">
+                                <div class="is-size-5 publication-authors">
+                                    <span class="author-block">
+                                        <a href="mailto:shi_yaxin@cfar.a-star.edu.sg">Yaxin Shi</a>
+                                        <sup>1</sup>
+                                        ,
+                                    </span>
+                                    <span class="author-block">
+                                        <a href="mailto:zxw.edu@gmail.com">Xiaowei Zhou</a>
+                                        <sup>2</sup>
+                                        ,
+                                    </span>
+                                    <span class="author-block">
+                                        <a href="mailto:pino.pingliu@gmail.com">Ping Liu</a>
+                                        <sup>2</sup>
+                                        ,
+            
+                                    </span>
+                                    <span class="author-block">
+                                        <a href="mailto:Ivor_Tsang@cfar.a-star.edu.sg">Ivor. W. Tsang</a>
+                                        <sup>1,2</sup>
+                                        ,
+            
+                                    </span>
+                                </div>
+                                <div class="is-size-5 publication-authors">
+                                    <span class="author-block">
+                                        <sup>1</sup>
+                                        Centre for Frontier AI Research (CFAR), A*STAR, Singapore
+                                    </span>
+                                    <span class="author-block">
+                                        <sup>2</sup>
+                                        Australian Artificial Intelligence Institute (AAII), University of Technology Sydney, Australia
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="column has-text-centered">
+                                <div class="publication-links">
+                                    <!-- PDF Link. -->
+                                    <span class="link-block">
+                                        <a href="https://arxiv.org/pdf/2304.11955.pdf" class="external-link button is-normal is-rounded is-dark">
+                                            <span class="icon">
+                                                <svg class="svg-inline--fa fa-file-pdf fa-w-12" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="file-pdf" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg="">
+                                                    <path fill="currentColor" d="M181.9 256.1c-5-16-4.9-46.9-2-46.9 8.4 0 7.6 36.9 2 46.9zm-1.7 47.2c-7.7 20.2-17.3 43.3-28.4 62.7 18.3-7 39-17.2 62.9-21.9-12.7-9.6-24.9-23.4-34.5-40.8zM86.1 428.1c0 .8 13.2-5.4 34.9-40.2-6.7 6.3-29.1 24.5-34.9 40.2zM248 160h136v328c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V24C0 10.7 10.7 0 24 0h200v136c0 13.2 10.8 24 24 24zm-8 171.8c-20-12.2-33.3-29-42.7-53.8 4.5-18.5 11.6-46.6 6.2-64.2-4.7-29.4-42.4-26.5-47.8-6.8-5 18.3-.4 44.1 8.1 77-11.6 27.6-28.7 64.6-40.8 85.8-.1 0-.1.1-.2.1-27.1 13.9-73.6 44.5-54.5 68 5.6 6.9 16 10 21.5 10 17.9 0 35.7-18 61.1-61.8 25.8-8.5 54.1-19.1 79-23.2 21.7 11.8 47.1 19.5 64 19.5 29.2 0 31.2-32 19.7-43.4-13.9-13.6-54.3-9.7-73.6-7.2zM377 105L279 7c-4.5-4.5-10.6-7-17-7h-6v128h128v-6.1c0-6.3-2.5-12.4-7-16.9zm-74.1 255.3c4.1-2.7-2.5-11.9-42.8-9 37.1 15.8 42.8 9 42.8 9z"></path>
+                                                </svg>
+                                                <!-- <i class="fas fa-file-pdf"></i> Font Awesome fontawesome.com -->
+                                            </span>
+                                            <span>Paper</span>
+                                        </a>
+                                    </span>
+                                    <span class="link-block">
+                                        <a href="https://arxiv.org/abs/2304.11955" class="external-link button is-normal is-rounded is-dark">
+                                            <span class="icon">
+                                                <i class="ai ai-arxiv"></i>
+                                            </span>
+                                            <span>arXiv</span>
+                                        </a>
+                                    </span>
+                                    <!-- Demo Link. -->
+                                    <span class="link-block">
+                                        <a href="https://arxiv.org/abs/2304.11955" class="external-link button is-normal is-rounded is-dark">
+                                            <span class="icon">
+                                                <svg class="svg-inline--fa fa-github fa-w-16" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="github" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" data-fa-i2svg="">
+                                                    <path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path>
+                                                </svg>
+                                                <!-- <i class="fab fa-github"></i> Font Awesome fontawesome.com -->
+                                            </span>
+                                            <span>Demo (comming soon)</span>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="hero teaser">
+            <div class="container is-max-desktop">
+                <div class="hero-body">
+                    <h2 class="subtitle has-text-centered">
+                        <p align="left">
+                            We propose a generative transition-based data translation paradigm which can equip a model with superior controllable generation ability for unseen properties, through <b>consistent data interpolation</b>
+                            .
+                        </p>
+                        <!-- We propose a generative transition-based data translation framework which posses outstanding controllable generation ability even for unseen properties, through <b>consistent data interpolation</b> -->
+                    </h2>
+                    <div class="item item-our-utsgan" align="center">
+                        <img src="./static/figures/1-1-our_paradigm.png" class="interpolation-image" alt="Our UTSGAN." width=45%>
+                        <br> <br>
+                    </div>
+                    <div align="center" class="item item-mot-results">
+                        <img src="./static/figures/1-2-mot_results.png" class="interpolation-image" alt="mot results." width=160%>
+                        <p class="subtitle has-text-centered">
+                            UTSGAN, instantiated based on our proposed paradigm, achieves outstanding results on translations <br>
+                            with <b>complex, or unseen, attribute configurations and domains</b>
+                            . 
+                        </p>
+                    </div>
+                <br><br>   
+                <!--/videos -->  
+                <div class="columns is-centered">
+                    <!-- Visual Effects. -->
+                    <div class="column">
+                        <div class="content">
+                            <h3 class="title is-3">Subtle attribute interpolation</h3>
+                            <p>
+                                <i>UTSGAN</i>
+                                can trigger <b>smooth and evident</b> subtle image editing along with single attribute interpolation. 
+                            </p>
+                            <video id="interpol-video" autoplay="" controls="" muted="" loop="" playsinline="">
+                                <source src="./static/videos/utsgan-subtle_attribute_interpolation.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+                    <!--/ Visual Effects. -->
+                    <!-- Matting. -->
+                    <div class="column">
+                        <h3 class="title is-3">Consistent face morphing</h3>
+                        <div class="columns is-centered">
+                            <div class="column content">
+                                <p>
+                                    <i>UTSGAN</i>
+                                    can perform consistent data generation/morphing <b>with only the desired aspects of attribute change</b>.
+                                </p>
+                                <video id="morphing-video" autoplay="" controls="" muted="" loop="" playsinline="">
+                                    <source src="./static/videos/utsgan-consistent_face_morphing.mp4" type="video/mp4">
+                                </video>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/ Matting. -->
+            </div>
+                </div>
+                </div>
+            </div>
+        </section>
+<hr/>
+<!--/ Problem. -->
+<section class="section">
+    <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+            <div class="column is-four-fifths">
+                <h2 class="title is-3">Problem</h2>
+                <div class="content has-text-justified">
+                    <p>
+                        In this work, we revisit and approach Image2Image (I2I) translation from a novel consistency perspective. We particularly study the generalization of consistency in I2I, which is the key factor to endlow a model ability to acheive satisfactory attribute-consistent results with arbitrary complex attribute configurations. 
+To be specific, in an I2I translation task, we expect consistent results that can correspond to its input, while showing specific desired attribute property (change). 
+Existing GAN-based generative frameworks commonly focus on maintaining such consistency based on the final translated results, with commonly adopted strategies including image reconstruction, cycle-consistency, attribute-preserving constraints or intermediate image-feature consistent constraints. 
+However, with a traditional attribute-conditional formulation and those classic result consistency constraints, a translation method is restricted to only leverage predefined conditions exampled in the training set for consistency learning. 
+This dilima would limit the model's generalization ability, making them achieve unsatisfactory results in challenging tasks where the expected attribute configuration is unseen/unknown during training. 
+However, 
+                        <b>
+                            to controllably generate/design data for unseen domains, or with unobserved attributes, is a highly demanding expection in real-world applications<b>.
+          </b>
+                        </b>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <!--/ Solution. -->
+        <div class="columns is-centered has-text-centered">
+            <div class="column is-four-fifths">
+                <h2 class="title is-3">Solution</h2>
+                <div class="content has-text-justified">
+                    <p>
+                    <p>
+                        We overcome this dilemma by proposing a <b>transition-aware I2I formulation</b>
+                        and a <b>generalized transition consistency</b>
+                        strategy which particularly highlights the consistency regularization on unseen translations for sake of model generalization.
+          
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section">
+    <div class="container is-max-desktop">
+        <!--/ Solution Part 1. -->
+        <div class="columns is-centered">
+            <div class="column is-full-width">
+                <div class="content has-text-justified">
+                    <p>(1). We explicitly parameterize the translation mapping with a transition variable \(\small{t \triangleq t(x,y)}\) and adopt a simple linear operator on the desireable semantic annotation of input-output data pairs, denoted as \(\small{S}\), to define the transtion metric for an I2I translation task. 
+                  In this way, each data mapping is characterized with the desired semantic change through the translation, i.e.</p>
+                    <span>
+                        <span class="katex-display">
+                            <span class="katex">
+                                <span class="katex-mathml">
+                                    <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                        <semantics>
+                                            <mrow>
+                                                <mi>x</mi>
+                                                <mo>
+                                                    <mover>
+                                                        <mo>
+                                                            <mo>⟶</mo>
+                                                        </mo>
+                                                        <mrow>
+                                                            <mi>t</mi>
+                                                            <mo>=</mo>
+                                                            <msub>
+                                                                <mi>A</mi>
+                                                                <mi>y</mi>
+                                                            </msub>
+                                                            <mo>−</mo>
+                                                            <msub>
+                                                                <mi>A</mi>
+                                                                <mi>x</mi>
+                                                            </msub>
+                                                        </mrow>
+                                                    </mover>
+                                                </mo>
+                                                <mi>y</mi>
+                                                <mi mathvariant="normal">.</mi>
+                                            </mrow>
+                                            <annotation encoding="application/x-tex">x\overset{t(\cdot) = S_y-S_x}{\longrightarrow}{y}.</annotation>
+                                        </semantics>
+                                    </math>
+                                </span>
+                                <span class="katex-html" aria-hidden="true">
+                                    <span class="base">
+                                        <span class="strut" style="height: 1.40865em; vertical-align: -0.011em;"></span>
+                                        <span class="mord mathdefault">x</span>
+                                        <span class="mspace" style="margin-right: 0.277778em;"></span>
+                                        <span class="mrel">
+                                            <span class="mop op-limits">
+                                                <span class="vlist-t vlist-t2">
+                                                    <span class="vlist-r">
+                                                        <span class="vlist" style="height: 1.39765em;">
+                                                            <span class="" style="top: -3em;">
+                                                                <span class="pstrut" style="height: 3em;"></span>
+                                                                <span class="">
+                                                                    <span class="mop">⟶</span>
+                                                                </span>
+                                                            </span>
+                                                            <span class="" style="top: -3.81932em; margin-left: 0em;">
+                                                                <span class="pstrut" style="height: 3em;"></span>
+                                                                <span class="sizing reset-size6 size3 mtight">
+                                                                    <span class="mord mtight">
+                                                                        <span class="mord mathdefault mtight">t(⋅)</span>
+                                                                        <span class="mrel mtight">=</span>
+                                                                        <span class="mord mtight">
+                                                                            <span class="mord mathdefault mtight">S</span>
+                                                                            <span class="msupsub">
+                                                                                <span class="vlist-t vlist-t2">
+                                                                                    <span class="vlist-r">
+                                                                                        <span class="vlist" style="height: 0.164543em;">
+                                                                                            <span class="" style="top: -2.357em; margin-left: 0em; margin-right: 0.0714286em;">
+                                                                                                <span class="pstrut" style="height: 2.5em;"></span>
+                                                                                                <span class="sizing reset-size3 size1 mtight">
+                                                                                                    <span class="mord mathdefault mtight" style="margin-right: 0.03588em;">y</span>
+                                                                                                </span>
+                                                                                            </span>
+                                                                                        </span>
+                                                                                        <span class="vlist-s">&ZeroWidthSpace;</span>
+                                                                                    </span>
+                                                                                    <span class="vlist-r">
+                                                                                        <span class="vlist" style="height: 0.281886em;">
+                                                                                            <span class=""></span>
+                                                                                        </span>
+                                                                                    </span>
+                                                                                </span>
+                                                                            </span>
+                                                                        </span>
+                                                                        <span class="mbin mtight">−</span>
+                                                                        <span class="mord mtight">
+                                                                            <span class="mord mathdefault mtight">S</span>
+                                                                            <span class="msupsub">
+                                                                                <span class="vlist-t vlist-t2">
+                                                                                    <span class="vlist-r">
+                                                                                        <span class="vlist" style="height: 0.164543em;">
+                                                                                            <span class="" style="top: -2.357em; margin-left: 0em; margin-right: 0.0714286em;">
+                                                                                                <span class="pstrut" style="height: 2.5em;"></span>
+                                                                                                <span class="sizing reset-size3 size1 mtight">
+                                                                                                    <span class="mord mathdefault mtight">x</span>
+                                                                                                </span>
+                                                                                            </span>
+                                                                                        </span>
+                                                                                        <span class="vlist-s">&ZeroWidthSpace;</span>
+                                                                                    </span>
+                                                                                    <span class="vlist-r">
+                                                                                        <span class="vlist" style="height: 0.143em;">
+                                                                                            <span class=""></span>
+                                                                                        </span>
+                                                                                    </span>
+                                                                                </span>
+                                                                            </span>
+                                                                        </span>
+                                                                    </span>
+                                                                </span>
+                                                            </span>
+                                                        </span>
+                                                        <span class="vlist-s">&ZeroWidthSpace;</span>
+                                                    </span>
+                                                    <span class="vlist-r">
+                                                        <span class="vlist" style="height: 0.011em;">
+                                                            <span class=""></span>
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </span>
+                                        <span class="mspace" style="margin-right: 0.277778em;"></span>
+                                    </span>
+                                    <span class="base">
+                                        <span class="strut" style="height: 0.625em; vertical-align: -0.19444em;"></span>
+                                        <span class="mord">
+                                            <span class="mord mathdefault" style="margin-right: 0.03588em;">y</span>
+                                        </span>
+                                        <span class="mord">.</span>
+                                    </span>
+                                </span>
+                            </span>
+                        </span>
+                    </span>
+                    <p>
+                        This results in a novel <b>transition-aware I2I formulation</b>
+                        . With the elegancy of simple linear operator, we can explain the self-reconstruction, cycle-consistency, and attribute preserving strategies (\(\small{S_{x}=0}\), i.e. to intuitively discard the attribute of the input image) adopted in existing works. 
+                 More importantly, such an explicit transition paramerization enables us to easily instantiate unobserved translations with arbituary attribute property (change) and allows for an essential consistency enforcement on the translation process itself, i.e., transition consistency. 
+                <b>Transition consistency is also valid on unobserved translations/conditions. It works in higher granularity than result consistency, and does not solicit paired data to be generalized to a distribution-level</b>
+                        .
+                    </p>
+                </div>
+                <div class="item item-transition-consistency" align="center">
+                    <img src="./static/figures/2-transition-consistency.png" class="interpolation-image" alt="Cycle Consistency." style="width:90%">
+                </div>
+            </div>
+        </div>
+        <!--/ Solution Part 2. -->
+        <div class="columns is-centered">
+            <div class="column is-full-width">
+                <div class="content has-text-justified">
+                    <p>
+                        (2). We propose <b>UTSGAN</b>, which introduces a generative transition mechanism that models a transition manifold with a stochastic encoder. 
+      In this way, we obtain triplets consisting of three interrelated variables \(\small{(X, T, Y)}\), where triplet consistency can be naturally enforced through bidirectional interactive processes, including result consistency for transition-conditional generation and transition consistency for transition prediction. We coherently regularize transition consistency on both 
+      observed translations with predefined transitions in the training set and unobserved transitions sampled from the manifold, together with the traditional result consistency. 
+      With a coherent triple consistency regularization, the virtuous collaboration between transition generation, and transition-conditioned I2I translation contribute to a <b>consistent data interpolation</b> paradium that can benefit the model's generalization ability with a <b>Self Supervised Learning (SSL) mechanism supported by the annotated transitions of data pairs</b>
+                        .
+      
+                    </p>
+                </div>
+                <div class="item item-transition-manifold" align="center">
+                    <img src="./static/figures/3-transition-manifold.png" class="interpolation-image" alt="Transition Manifold." style="width:90%">
+                </div>
+            </div>
+        </div>
+        <!--/ Solution Part 3. -->
+        <div class="columns is-centered">
+            <div class="column is-full-width">
+                <div class="content has-text-justified">
+                    <p>(3). We perfrom triplet distribution matching for UTSGAN, by equiping it with a triplet discriminator that generalize the coherent sample-level consistency regularization to the distribution-level. 
+In this way, UTSGAN enforces a comprehensive consistency regularization for I2I translation based on the second-order logic of \(\small{X}\) and \(\small{Y}\), where for \(\small{\forall t \in T}\), \(\small{\forall x \in X}\), \(\small{x \overset{t}{\mapsto}y}\) to be true, i.e., \(\small{X \overset{T}{\mapsto}Y}\), must hold. This gives UTSGAN superiority in model generalization regarding attribute-consistent generalization. A simple model design of UTSGAN is depicted as follows
+          </p>
+                </div>
+                <div class="item item-utsgan-model">
+                    <img width=160% src="./static/figures/4-utsgan-model.png" class="interpolation-image" alt="UTS Model.">
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Results. -->
+    <hr/>
+    <section class="section">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered has-text-centered">
+                <div class="column is-full-width">
+                    <h2 class="title is-3">Example results</h2>
+                    <div class="content has-text-justified">
+                        <p>
+                            We adopt I2I, where a consistent transaltion can be easily demonstrated, to verify the efficiency of our proposed paradigm.
+            <b>Our UTSGAN is capable to handle various I2I translation tasks, with the transition characterized by handcrafted aspects of attribute change</b>
+                            . 
+            Here we present the challenging tasks of multiple attribute face editing (complex attribute configuration), single attribute interpolation and 
+            multi-domain style generalization (unseen attribute/domain configuration). 
+            You can refer to <a href="https://arxiv.org/pdf/2304.11955.pdf">our paper</a>
+                            for more transition configuration and more results of attribute natural scenes editing and image inpainting tasks.
+                        </p>
+                    </div>
+                    <div class="content a">
+                        <h3 align="left" class="title is-4">
+                            (a). Multi-attribute face editing and interpolation (
+                            <span>
+                                <span class="katex">
+                                    <span class="katex-mathml">
+                                        <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                            <semantics>
+                                                <mrow>
+                                                    <mi>x</mi>
+                                                    <mo>
+                                                        <mover>
+                                                            <mo>
+                                                                <mo>⟶</mo>
+                                                            </mo>
+                                                            <mrow>
+                                                                <mi>t</mi>
+                                                                <mo>=</mo>
+                                                                <msub>
+                                                                    <mi>A</mi>
+                                                                    <mi>y</mi>
+                                                                </msub>
+                                                                <mo>−</mo>
+                                                                <msub>
+                                                                    <mi>A</mi>
+                                                                    <mi>x</mi>
+                                                                </msub>
+                                                            </mrow>
+                                                        </mover>
+                                                    </mo>
+                                                    <mi>y</mi>
+                                                </mrow>
+                                                <annotation encoding="application/x-tex">x\overset{t = A_y-A_x}{\longrightarrow}{y}</annotation>
+                                            </semantics>
+                                        </math>
+                                    </span>
+                                    <span class="katex-html" aria-hidden="true">
+                                        <span class="base">
+                                            <span class="strut" style="height: 1.40865em; vertical-align: -0.011em;"></span>
+                                            <span class="mord mathdefault">x</span>
+                                            <span class="mspace" style="margin-right: 0.277778em;"></span>
+                                            <span class="mrel">
+                                                <span class="mop op-limits">
+                                                    <span class="vlist-t vlist-t2">
+                                                        <span class="vlist-r">
+                                                            <span class="vlist" style="height: 1.39765em;">
+                                                                <span class="" style="top: -3em;">
+                                                                    <span class="pstrut" style="height: 3em;"></span>
+                                                                    <span class="">
+                                                                        <span class="mop">⟶</span>
+                                                                    </span>
+                                                                </span>
+                                                                <span class="" style="top: -3.81932em; margin-left: 0em;">
+                                                                    <span class="pstrut" style="height: 3em;"></span>
+                                                                    <span class="sizing reset-size6 size3 mtight">
+                                                                        <span class="mord mtight">
+                                                                            <span class="mord mathdefault mtight">t</span>
+                                                                            <span class="mrel mtight">=</span>
+                                                                            <span class="mord mtight">
+                                                                                <span class="mord mathdefault mtight">A</span>
+                                                                                <span class="msupsub">
+                                                                                    <span class="vlist-t vlist-t2">
+                                                                                        <span class="vlist-r">
+                                                                                            <span class="vlist" style="height: 0.164543em;">
+                                                                                                <span class="" style="top: -2.357em; margin-left: 0em; margin-right: 0.0714286em;">
+                                                                                                    <span class="pstrut" style="height: 2.5em;"></span>
+                                                                                                    <span class="sizing reset-size3 size1 mtight">
+                                                                                                        <span class="mord mathdefault mtight" style="margin-right: 0.03588em;">y</span>
+                                                                                                    </span>
+                                                                                                </span>
+                                                                                            </span>
+                                                                                            <span class="vlist-s">&ZeroWidthSpace;</span>
+                                                                                        </span>
+                                                                                        <span class="vlist-r">
+                                                                                            <span class="vlist" style="height: 0.281886em;">
+                                                                                                <span class=""></span>
+                                                                                            </span>
+                                                                                        </span>
+                                                                                    </span>
+                                                                                </span>
+                                                                            </span>
+                                                                            <span class="mbin mtight">−</span>
+                                                                            <span class="mord mtight">
+                                                                                <span class="mord mathdefault mtight">A</span>
+                                                                                <span class="msupsub">
+                                                                                    <span class="vlist-t vlist-t2">
+                                                                                        <span class="vlist-r">
+                                                                                            <span class="vlist" style="height: 0.164543em;">
+                                                                                                <span class="" style="top: -2.357em; margin-left: 0em; margin-right: 0.0714286em;">
+                                                                                                    <span class="pstrut" style="height: 2.5em;"></span>
+                                                                                                    <span class="sizing reset-size3 size1 mtight">
+                                                                                                        <span class="mord mathdefault mtight">x</span>
+                                                                                                    </span>
+                                                                                                </span>
+                                                                                            </span>
+                                                                                            <span class="vlist-s">&ZeroWidthSpace;</span>
+                                                                                        </span>
+                                                                                        <span class="vlist-r">
+                                                                                            <span class="vlist" style="height: 0.143em;">
+                                                                                                <span class=""></span>
+                                                                                            </span>
+                                                                                        </span>
+                                                                                    </span>
+                                                                                </span>
+                                                                            </span>
+                                                                        </span>
+                                                                    </span>
+                                                                </span>
+                                                            </span>
+                                                            <span class="vlist-s">&ZeroWidthSpace;</span>
+                                                        </span>
+                                                        <span class="vlist-r">
+                                                            <span class="vlist" style="height: 0.011em;">
+                                                                <span class=""></span>
+                                                            </span>
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                            </span>
+                                            <span class="mspace" style="margin-right: 0.277778em;"></span>
+                                        </span>
+                                        <span class="base">
+                                            <span class="strut" style="height: 0.625em; vertical-align: -0.19444em;"></span>
+                                            <span class="mord">
+                                                <span class="mord mathdefault" style="margin-right: 0.03588em;">y</span>
+                                            </span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </span>
+                            )
+                        </h3>
+                        <div class="item item-face-multi">
+                            <img src="./static/figures/results_5-1_face_multi_attributes.png" class="interpolation-image" alt="Face Multi Attributes.">
+                        </div>
+                        <div class="item item-face-interpol">
+                            <img src="./static/figures/results_5-2_face_interpol.png" class="interpolation-image" alt="Face Interpol.">
+                        </div>
+                    </div>
+                    <div class="content b">
+                        <h3 align="left" class="title is-4">
+                            (b). Multi-Domain stylization and generalization (
+                            <span>
+                                <span class="katex">
+                                    <span class="katex-mathml">
+                                        <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                            <semantics>
+                                                <mrow>
+                                                    <mi>x</mi>
+                                                    <mo>
+                                                        <mover>
+                                                            <mo>
+                                                                <mo>⟶</mo>
+                                                            </mo>
+                                                            <mi>t</mi>
+                                                        </mover>
+                                                    </mo>
+                                                    <msup>
+                                                        <mi>y</mi>
+                                                        <mi>t</mi>
+                                                    </msup>
+                                                </mrow>
+                                                <annotation encoding="application/x-tex">x\overset{t }{\longrightarrow}{y^{t}}</annotation>
+                                            </semantics>
+                                        </math>
+                                    </span>
+                                    <span class="katex-html" aria-hidden="true">
+                                        <span class="base">
+                                            <span class="strut" style="height: 1.25256em; vertical-align: -0.011em;"></span>
+                                            <span class="mord mathdefault">x</span>
+                                            <span class="mspace" style="margin-right: 0.277778em;"></span>
+                                            <span class="mrel">
+                                                <span class="mop op-limits">
+                                                    <span class="vlist-t vlist-t2">
+                                                        <span class="vlist-r">
+                                                            <span class="vlist" style="height: 1.24156em;">
+                                                                <span class="" style="top: -3em;">
+                                                                    <span class="pstrut" style="height: 3em;"></span>
+                                                                    <span class="">
+                                                                        <span class="mop">⟶</span>
+                                                                    </span>
+                                                                </span>
+                                                                <span class="" style="top: -3.711em; margin-left: 0em;">
+                                                                    <span class="pstrut" style="height: 3em;"></span>
+                                                                    <span class="sizing reset-size6 size3 mtight">
+                                                                        <span class="mord mtight">
+                                                                            <span class="mord mathdefault mtight">t</span>
+                                                                        </span>
+                                                                    </span>
+                                                                </span>
+                                                            </span>
+                                                            <span class="vlist-s">&ZeroWidthSpace;</span>
+                                                        </span>
+                                                        <span class="vlist-r">
+                                                            <span class="vlist" style="height: 0.011em;">
+                                                                <span class=""></span>
+                                                            </span>
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                            </span>
+                                            <span class="mspace" style="margin-right: 0.277778em;"></span>
+                                        </span>
+                                        <span class="base">
+                                            <span class="strut" style="height: 0.987996em; vertical-align: -0.19444em;"></span>
+                                            <span class="mord">
+                                                <span class="mord">
+                                                    <span class="mord mathdefault" style="margin-right: 0.03588em;">y</span>
+                                                    <span class="msupsub">
+                                                        <span class="vlist-t">
+                                                            <span class="vlist-r">
+                                                                <span class="vlist" style="height: 0.793556em;">
+                                                                    <span class="" style="top: -3.063em; margin-right: 0.05em;">
+                                                                        <span class="pstrut" style="height: 2.7em;"></span>
+                                                                        <span class="sizing reset-size6 size3 mtight">
+                                                                            <span class="mord mtight">
+                                                                                <span class="mord mathdefault mtight">t</span>
+                                                                            </span>
+                                                                        </span>
+                                                                    </span>
+                                                                </span>
+                                                            </span>
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </span>
+                            )
+                        </h3>
+                        <div class="item item-multi-stylization">
+                            <img src="./static/figures/results_5-3_multi-stylization.png" class="interpolation-image" alt="Multi Domain Example.">
+                        </div>
+                    </div>
+                    <div class="content c">
+                        <h3 align="left" class="title is-4">
+                            (c). Multi-Domain content editing (
+                            <span>
+                                <span class="katex">
+                                    <span class="katex-mathml">
+                                        <math xmlns="http://www.w3.org/1998/Math/MathML">
+                                            <semantics>
+                                                <mrow>
+                                                    <mi>x</mi>
+                                                    <mo>
+                                                        <mover>
+                                                            <mo>
+                                                                <mo>⟶</mo>
+                                                            </mo>
+                                                            <mi>t</mi>
+                                                        </mover>
+                                                    </mo>
+                                                    <msup>
+                                                        <mi>y</mi>
+                                                        <mi>t</mi>
+                                                    </msup>
+                                                </mrow>
+                                                <annotation encoding="application/x-tex">x\overset{t }{\longrightarrow}{y^{t}}</annotation>
+                                            </semantics>
+                                        </math>
+                                    </span>
+                                    <span class="katex-html" aria-hidden="true">
+                                        <span class="base">
+                                            <span class="strut" style="height: 1.25256em; vertical-align: -0.011em;"></span>
+                                            <span class="mord mathdefault">x</span>
+                                            <span class="mspace" style="margin-right: 0.277778em;"></span>
+                                            <span class="mrel">
+                                                <span class="mop op-limits">
+                                                    <span class="vlist-t vlist-t2">
+                                                        <span class="vlist-r">
+                                                            <span class="vlist" style="height: 1.24156em;">
+                                                                <span class="" style="top: -3em;">
+                                                                    <span class="pstrut" style="height: 3em;"></span>
+                                                                    <span class="">
+                                                                        <span class="mop">⟶</span>
+                                                                    </span>
+                                                                </span>
+                                                                <span class="" style="top: -3.711em; margin-left: 0em;">
+                                                                    <span class="pstrut" style="height: 3em;"></span>
+                                                                    <span class="sizing reset-size6 size3 mtight">
+                                                                        <span class="mord mtight">
+                                                                            <span class="mord mathdefault mtight">t</span>
+                                                                        </span>
+                                                                    </span>
+                                                                </span>
+                                                            </span>
+                                                            <span class="vlist-s">&ZeroWidthSpace;</span>
+                                                        </span>
+                                                        <span class="vlist-r">
+                                                            <span class="vlist" style="height: 0.011em;">
+                                                                <span class=""></span>
+                                                            </span>
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                            </span>
+                                            <span class="mspace" style="margin-right: 0.277778em;"></span>
+                                        </span>
+                                        <span class="base">
+                                            <span class="strut" style="height: 0.987996em; vertical-align: -0.19444em;"></span>
+                                            <span class="mord">
+                                                <span class="mord">
+                                                    <span class="mord mathdefault" style="margin-right: 0.03588em;">y</span>
+                                                    <span class="msupsub">
+                                                        <span class="vlist-t">
+                                                            <span class="vlist-r">
+                                                                <span class="vlist" style="height: 0.793556em;">
+                                                                    <span class="" style="top: -3.063em; margin-right: 0.05em;">
+                                                                        <span class="pstrut" style="height: 2.7em;"></span>
+                                                                        <span class="sizing reset-size6 size3 mtight">
+                                                                            <span class="mord mtight">
+                                                                                <span class="mord mathdefault mtight">t</span>
+                                                                            </span>
+                                                                        </span>
+                                                                    </span>
+                                                                </span>
+                                                            </span>
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                            </span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </span>
+                            )
+                        </h3>
+                        <div class="item item-multi-content-editing">
+                            <img src="./static/figures/results_5-4_multi_content_editing.png" class="interpolation-image" alt="Multi Domain Content Editing.">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr/>
+        <section class="section" id="BibTeX">
+            <div class="container is-max-desktop content">
+                <h2 class="title">BibTeX</h2>
+                <pre>
+<code>@article{shi2023utsgan,
+  title={UTSGAN: Unseen Transition Suss GAN for Transition-Aware Image-to-image Translation},
+  author={Shi, Yaxin and Zhou, Xiaowei and Liu, Ping and Tsang, Ivor W},
+  journal={arXiv preprint arXiv:2304.11955},
+  year={2023}
+}</code>
+                </pre>
+            </div>
+        </section>
+        <footer class="footer">
+            <div align="center" class="container">
+                <div class="content has-text-centered">
+                    <a class="icon-link" href="https://arxiv.org/pdf/2304.11955.pdf">
+                        <svg class="svg-inline--fa fa-file-pdf fa-w-12" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="file-pdf" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg="">
+                            <path fill="currentColor" d="M181.9 256.1c-5-16-4.9-46.9-2-46.9 8.4 0 7.6 36.9 2 46.9zm-1.7 47.2c-7.7 20.2-17.3 43.3-28.4 62.7 18.3-7 39-17.2 62.9-21.9-12.7-9.6-24.9-23.4-34.5-40.8zM86.1 428.1c0 .8 13.2-5.4 34.9-40.2-6.7 6.3-29.1 24.5-34.9 40.2zM248 160h136v328c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V24C0 10.7 10.7 0 24 0h200v136c0 13.2 10.8 24 24 24zm-8 171.8c-20-12.2-33.3-29-42.7-53.8 4.5-18.5 11.6-46.6 6.2-64.2-4.7-29.4-42.4-26.5-47.8-6.8-5 18.3-.4 44.1 8.1 77-11.6 27.6-28.7 64.6-40.8 85.8-.1 0-.1.1-.2.1-27.1 13.9-73.6 44.5-54.5 68 5.6 6.9 16 10 21.5 10 17.9 0 35.7-18 61.1-61.8 25.8-8.5 54.1-19.1 79-23.2 21.7 11.8 47.1 19.5 64 19.5 29.2 0 31.2-32 19.7-43.4-13.9-13.6-54.3-9.7-73.6-7.2zM377 105L279 7c-4.5-4.5-10.6-7-17-7h-6v128h128v-6.1c0-6.3-2.5-12.4-7-16.9zm-74.1 255.3c4.1-2.7-2.5-11.9-42.8-9 37.1 15.8 42.8 9 42.8 9z"></path>
+                        </svg>
+                        <!-- <i class="fas fa-file-pdf"></i> Font Awesome fontawesome.com -->
+                    </a>
+                    <a class="icon-link" href="pending" disabled="">
+                        <svg class="svg-inline--fa fa-github fa-w-16" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="github" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512" data-fa-i2svg="">
+                            <path fill="currentColor" d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path>
+                        </svg>
+                        <!-- <i class="fab fa-github"></i> Font Awesome fontawesome.com -->
+                    </a>
+                </div>
+                <div class="columns is-centered">
+                    <div class="column is-8">
+                        <div class="content">
+                            <p>
+                                Source code for this page is borrowed from <a href="https://nerfies.github.io/">nerfies</a>
+                                .
+          
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+</body></html>
